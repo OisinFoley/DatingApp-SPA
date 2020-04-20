@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/_services/auth.service';
+import { AlertifyService } from 'src/app/_services/alertify.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
@@ -8,31 +10,40 @@ import { AuthService } from 'src/app/_services/auth.service';
 })
 export class NavComponent implements OnInit {
   model: any = {};
+  username = 'User';
 
-  constructor(private auth: AuthService) { }
+  constructor(
+    private auth: AuthService,
+    private alertify: AlertifyService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
+    this.auth.decodedToken.subscribe((token) => {
+      this.username = token.unique_name;
+    });
   }
 
   login() {
-    // console.log(this.model);
     this.auth.login(this.model)
-      .subscribe((response: any) => {
-        console.log('login success');
+      .subscribe(() => {
+        this.alertify.success('login success');
       }, error => {
-        console.log(error);
+        this.alertify.error(error);
+      }, () => {
+        this.router.navigate(['/members']);
       });
   }
 
   // TODO: set an isLoggedIn prop instead of calling this func multiple times within the template
   loggedIn() {
-    const token = localStorage.getItem('token');
-    return !!token;
+    return this.auth.loggedIn();
   }
 
   logOut() {
     localStorage.removeItem('token');
-    console.log('logged out');
+    this.alertify.message('logged out');
+    this.router.navigate(['/home']);
   }
 
 }
