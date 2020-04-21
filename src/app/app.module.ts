@@ -7,20 +7,24 @@ import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgxGalleryModule } from 'ngx-gallery';
 
-import { AppComponent } from './app.component';
+import { appRoutes } from './routes';
 import { NavComponent } from './nav/nav/nav.component';
+import { AppComponent } from './app.component';
 import { AuthService } from './_services/auth.service';
+import { ErrorInterceptorProvider } from './_services/error-interceptor';
 import { HomeComponent } from './home/home/home.component';
 import { RegisterComponent } from './register/register/register.component';
-import { ErrorInterceptorProvider } from './_services/error-interceptor';
-import { MemberListComponent } from './members/member-list/member-list.component';
 import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
-import { appRoutes } from './routes';
+import { MemberListComponent } from './members/member-list/member-list.component';
 import { MemberCardComponent } from './members/member-card/member-card/member-card.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail/member-detail.component';
+import { MemberEditComponent } from './members/member-edit/member-edit/member-edit.component';
 import { MemberDetailResolver } from './_resolvers/member-detail.resolver';
 import { MemberListResolver } from './_resolvers/member-list.resolver';
+import { MemberEditResolver } from './_resolvers/member-edit.resolver';
+import { AuthGuard } from './_guard/auth.guard';
+import { PreventUnsavedChangesGuard } from './_guard/prevent-unsaved-changes.guard';
 
 export const tokenGetter = () => {
    return localStorage.getItem('token');
@@ -47,7 +51,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       ListsComponent,
       MessagesComponent,
       MemberCardComponent,
-      MemberDetailComponent
+      MemberDetailComponent,
+      MemberEditComponent
    ],
    imports: [
       BrowserModule,
@@ -66,9 +71,12 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       })
    ],
    providers: [
+      AuthGuard,
+      PreventUnsavedChangesGuard,
       AuthService,
       MemberDetailResolver,
       MemberListResolver,
+      MemberEditResolver,
       ErrorInterceptorProvider,
       /*
          Needed to resolve an issue related to using NgxGallery in Angular 8+

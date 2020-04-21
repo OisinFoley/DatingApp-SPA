@@ -3,7 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject } from 'rxjs';
+
 import { environment } from 'src/environments/environment';
+import { Token } from '../_interfaces/Token';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,7 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
   baseUrl = `${environment.apiUri}/auth`;
   jwtHelper = new JwtHelperService();
-  decodedToken: BehaviorSubject<any> = new BehaviorSubject<any>(null);
+  decodedToken: BehaviorSubject<Token> = new BehaviorSubject<Token>(null);
 
   constructor(private http: HttpClient) { }
 

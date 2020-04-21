@@ -6,23 +6,26 @@ import { Observable, of } from 'rxjs';
 import { User } from '../_models/user';
 import { UserService } from '../_services/user.service';
 import { AlertifyService } from '../_services/alertify.service';
+import { AuthService } from '../_services/auth.service';
 
 @Injectable()
-export class MemberDetailResolver implements Resolve<User> {
+export class MemberEditResolver implements Resolve<User> {
   constructor(
     private userService: UserService,
+    private authService: AuthService,
     private router: Router,
     private alertify: AlertifyService
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<User> {
-    return this.userService.getUser(route.params.id)
-      .pipe(
-        catchError(() => {
-          this.alertify.error('Problem retrieving data');
-          this.router.navigate(['/members']);
-          return of(null);
-        })
-      );
+    return this.userService.getUser(
+      +this.authService.decodedToken.getValue().nameid
+    ).pipe(
+      catchError(() => {
+        this.alertify.error('Problem retrieving data');
+        this.router.navigate(['/members']);
+        return of(null);
+      })
+    );
   }
 }
