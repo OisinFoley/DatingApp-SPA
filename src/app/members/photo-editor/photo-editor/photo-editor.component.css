@@ -1,0 +1,16 @@
+#photo-editor-img-thumbnail {
+  min-width: 100px;
+}
+
+.img-thumbnail {
+  height: 100px;
+  margin-bottom: 2px;
+}
+
+.nv-file-over {
+  border: dotted 3px red;
+}
+
+input[type=file] {
+  color: transparent;
+}

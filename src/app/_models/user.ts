@@ -10,7 +10,7 @@ export interface User {
   lastActive: Date;
   city: string;
   country: string;
-  photoURL: string;
+  photoUrl: string;
   introduction?: string;
   lookingFor?: string;
   interests?: string;

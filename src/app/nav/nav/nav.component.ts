@@ -11,21 +11,26 @@ import { Router } from '@angular/router';
 export class NavComponent implements OnInit {
   model: any = {};
   username = 'User';
+  photoUrl = '';
 
+  // TODO: fix bug whereby photo is not appearing after login unless we refresh browser
   constructor(
-    private auth: AuthService,
+    private authService: AuthService,
     private alertify: AlertifyService,
     private router: Router
   ) { }
 
   ngOnInit() {
-    this.auth.decodedToken.subscribe((token) => {
+    this.authService.decodedToken.subscribe(token => {
       this.username = token.unique_name;
+    });
+    this.authService.photoUrl.subscribe(photoUrl => {
+      this.photoUrl = photoUrl;
     });
   }
 
   login() {
-    this.auth.login(this.model)
+    this.authService.login(this.model)
       .subscribe(() => {
         this.alertify.success('login success');
       }, error => {
@@ -37,11 +42,14 @@ export class NavComponent implements OnInit {
 
   // TODO: set an isLoggedIn prop instead of calling this func multiple times within the template
   loggedIn() {
-    return this.auth.loggedIn();
+    return this.authService.loggedIn();
   }
 
   logOut() {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.authService.decodedToken.next(null);
+    this.authService.changeMemberPhoto(null);
     this.alertify.message('logged out');
     this.router.navigate(['/home']);
   }
