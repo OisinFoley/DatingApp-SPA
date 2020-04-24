@@ -24,8 +24,9 @@ export class AuthService {
     this.photoUrl.next(url);
   }
 
-  login(model: any) {
-    return this.http.post(this.baseUrl + '/login', model).pipe(
+  // TODO: add type to arg
+  login(credentials: any) {
+    return this.http.post(this.baseUrl + '/login', credentials).pipe(
       map((response: any) => {
         if (response) {
           const { token, user } = response;
@@ -39,11 +40,8 @@ export class AuthService {
     );
   }
 
-  register(model: any) {
-    return this.http.post(
-      this.baseUrl + '/register',
-      model
-    );
+  register(user: User) {
+    return this.http.post(this.baseUrl + '/register', user);
   }
 
   loggedIn() {

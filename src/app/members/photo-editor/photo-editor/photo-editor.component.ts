@@ -60,6 +60,12 @@ export class PhotoEditorComponent implements OnInit {
         const { id, url, dateAdded, description, isMain } = JSON.parse(response);
         const photo = { id, url, dateAdded, description, isMain };
         this.photos.push(photo);
+        if (photo.isMain) {
+          // TODO: export this and the same lines in setMainPhoto to a util function
+          this.authService.changeMemberPhoto(photo.url);
+          this.authService.currentUser.photoUrl = photo.url;
+          localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
+        }
       }
     };
   }
