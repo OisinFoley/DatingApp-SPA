@@ -10,8 +10,6 @@ import { User } from 'src/app/_models/user';
   styleUrls: ['./member-detail.component.css']
 })
 export class MemberDetailComponent implements OnInit {
-  // TODO: can it be private?
-  // TODO: the images are blurry on this component, may need replacing with better quality
   user: User;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];

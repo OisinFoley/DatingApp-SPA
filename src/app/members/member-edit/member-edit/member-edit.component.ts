@@ -14,7 +14,6 @@ import { AuthService } from 'src/app/_services/auth.service';
 })
 export class MemberEditComponent implements OnInit {
   @ViewChild('editForm', { static: true }) editForm: NgForm;
-  // TODO: can we make user private?
   user: User;
   photoUrl: string;
   @HostListener('window:beforeunload', ['$event'])

@@ -13,16 +13,13 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
   styleUrls: ['./photo-editor.component.css']
 })
 export class PhotoEditorComponent implements OnInit {
-  @Input() photos: Photo[];
-  @Output() getMemberPhotoChange = new EventEmitter<string>();
   private authenticatedId: number = null;
   private currentMain: Photo;
-
-  // TODO: can we make private?
+  private baseUrl = environment.apiUri;
+  @Input() photos: Photo[];
+  @Output() getMemberPhotoChange = new EventEmitter<string>();
   uploader: FileUploader;
   hasBaseDropZoneOver = false;
-  hasAnotherDropZoneOver = false;
-  baseUrl = environment.apiUri;
 
   constructor(
     private authService: AuthService,
