@@ -13,7 +13,7 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
   styleUrls: ['./photo-editor.component.css']
 })
 export class PhotoEditorComponent implements OnInit {
-  private authenticatedId: number = null;
+  private authenticatedUserId: number = null;
   private currentMain: Photo;
   private baseUrl = environment.apiUri;
   @Input() photos: Photo[];
@@ -28,7 +28,7 @@ export class PhotoEditorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.authenticatedId = +this.authService.decodedToken.getValue().nameid;
+    this.authenticatedUserId = +this.authService.decodedToken.getValue().nameid;
     this.initializeUploader();
   }
 
@@ -38,7 +38,7 @@ export class PhotoEditorComponent implements OnInit {
 
   initializeUploader() {
     this.uploader = new FileUploader({
-      url: `${this.baseUrl}/users/${this.authenticatedId}/photos`,
+      url: `${this.baseUrl}/users/${this.authenticatedUserId}/photos`,
       authToken: `Bearer ${localStorage.getItem('token')}`,
       isHTML5: true,
       allowedFileType: ['image'],
@@ -68,7 +68,7 @@ export class PhotoEditorComponent implements OnInit {
   }
 
   setMainPhoto(photo: Photo) {
-    this.userService.setMainPhoto(+this.authenticatedId, photo.id)
+    this.userService.setMainPhoto(+this.authenticatedUserId, photo.id)
       .subscribe(() => {
         this.currentMain = this.photos.filter(p => p.isMain === true)[0];
         this.currentMain.isMain = false;
@@ -84,7 +84,7 @@ export class PhotoEditorComponent implements OnInit {
 
   deletePhoto(id: number) {
     this.alertify.confirm('Are you sure you want to delete this photo?', () => {
-      this.userService.deletePhoto(+this.authenticatedId, id)
+      this.userService.deletePhoto(+this.authenticatedUserId, id)
         .subscribe(() => {
           this.photos.splice(
             this.photos.findIndex(p => p.id === id), 1

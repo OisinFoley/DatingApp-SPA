@@ -5,7 +5,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { BehaviorSubject } from 'rxjs';
 
 import { environment } from 'src/environments/environment';
-import { Token } from '../_interfaces/Token';
+import { Token } from '../_interfaces/token';
 import { User } from '../_models/user';
 
 @Injectable({
