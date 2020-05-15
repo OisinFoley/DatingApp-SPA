@@ -18,7 +18,6 @@ export class ListsComponent implements OnInit {
   likesParam: string;
 
   constructor(
-    private authService: AuthService,
     private userService: UserService,
     private alertify: AlertifyService,
     private route: ActivatedRoute

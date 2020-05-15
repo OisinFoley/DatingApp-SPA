@@ -30,6 +30,8 @@ import { PreventUnsavedChangesGuard } from './_guard/prevent-unsaved-changes.gua
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor/photo-editor.component';
 import { FileUploadModule } from 'ng2-file-upload';
 import { ListsResolver } from './_resolvers/lists.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
+import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
 export const tokenGetter = () => {
    return localStorage.getItem('token');
@@ -58,6 +60,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       MemberCardComponent,
       MemberDetailComponent,
       MemberEditComponent,
+      MemberMessagesComponent,
       PhotoEditorComponent,
       TimeAgoPipe
    ],
@@ -91,6 +94,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       MemberListResolver,
       MemberEditResolver,
       ListsResolver,
+      MessagesResolver,
       ErrorInterceptorProvider,
       /*
          Needed to resolve an issue related to using NgxGallery in Angular 8+
