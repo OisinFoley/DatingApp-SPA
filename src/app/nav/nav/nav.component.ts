@@ -14,7 +14,7 @@ export class NavComponent implements OnInit {
   username = 'User';
   photoUrl = '';
 
-  // TODO: fix bug whereby photo is not appearing after login unless we refresh browser
+  // TODO: fix bug whereby username is not appearing after login unless we refresh browser
   constructor(
     private authService: AuthService,
     private alertify: AlertifyService,

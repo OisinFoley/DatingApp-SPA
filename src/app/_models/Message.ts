@@ -9,5 +9,5 @@ export interface Message {
   content: string;
   isRead: boolean;
   dateRead: Date;
-  messageSentDate: Date;
+  dateSent: Date;
 }
