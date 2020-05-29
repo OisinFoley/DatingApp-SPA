@@ -33,9 +33,9 @@ import { ListsResolver } from './_resolvers/lists.resolver';
 import { MessagesResolver } from './_resolvers/messages.resolver';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 
-export const tokenGetter = () => {
+export function tokenGetter() {
    return localStorage.getItem('token');
-};
+}
 
 /*
    Needed to resolve an issue related to using NgxGallery in Angular 8+
