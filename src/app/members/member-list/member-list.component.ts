@@ -6,6 +6,13 @@ import { Pagination, PaginatedResult } from 'src/app/_models/pagination';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { UserService } from 'src/app/_services/user.service';
 import { UserParams } from 'src/app/_interfaces/user-params';
+import { Gender } from 'src/app/_interfaces/gender';
+import { MembersHelper } from '../members-helper';
+
+
+
+
+
 
 @Component({
   selector: 'app-member-list',
@@ -13,16 +20,27 @@ import { UserParams } from 'src/app/_interfaces/user-params';
   styleUrls: ['./member-list.component.css']
 })
 export class MemberListComponent implements OnInit {
-  users: User[];
-  pagination: Pagination;
-  user: User = JSON.parse(localStorage.getItem('user'));
-  genderList = [{ value: 'male', display: 'Males' }, { value: 'female', display: 'Females' }];
-  userParams: UserParams = {};
+  private readonly _user: User = JSON.parse(localStorage.getItem('user'));
+  private _users: User[];
+  private _pagination: Pagination;
+  private _genderList: Gender[] = [];
+  private _userParams: UserParams = {};
+
+  get users(): User[] { return this._users; }
+  set users(e: User[]) { this._users = e; }
+  get pagination(): Pagination { return this._pagination; }
+  set pagination(e: Pagination) { this._pagination = e; }
+  get user(): User { return this._user; }
+  get genderList(): Gender[] { return this._genderList; }
+  set genderList(e: Gender[]) { this._genderList = e; }
+  get userParams(): UserParams { return this._userParams; }
+  set userParams(e: UserParams) { this._userParams = e; }
 
   constructor(
     private route: ActivatedRoute,
     private alertify: AlertifyService,
-    private userService: UserService
+    private userService: UserService,
+    private membersHelper: MembersHelper
   ) {}
 
   ngOnInit() {
@@ -30,12 +48,8 @@ export class MemberListComponent implements OnInit {
       this.users = data.users.result;
       this.pagination = data.users.pagination;
     });
-
-    // TODO: util to load default values and build up this obj
-    this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
-    this.userParams.minAge = 18;
-    this.userParams.maxAge = 99;
-    this.userParams.orderBy = 'lastActive';
+    this.genderList = this.membersHelper.getGenderList();
+    this.membersHelper.setDefaultMemberListFilteringParams(this.user.gender, this.userParams);
   }
 
   pageChanged(event: any) {
@@ -44,10 +58,7 @@ export class MemberListComponent implements OnInit {
   }
 
   resetFilters() {
-    // TODO: move this into a util
-    this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
-    this.userParams.minAge = 18;
-    this.userParams.maxAge = 99;
+    this.membersHelper.setDefaultMemberListFilteringParams(this.user.gender, this.userParams);
     this.loadUsers();
   }
 

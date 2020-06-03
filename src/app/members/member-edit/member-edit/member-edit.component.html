@@ -12,7 +12,7 @@
   <div class="row">
     <div class="col-sm-4">
       <div class="card">
-        <img src="{{photoUrl || '../../../assets/user.png'}}" alt="{{user.knownAs}}" class="card-img-top img-thumbnail">
+        <img src="{{photoUrl || 'assets/user.png'}}" alt="{{user.knownAs}}" class="card-img-top img-thumbnail">
         <div class="card-body">
           <div>
             <strong>Location:</strong>
@@ -32,7 +32,11 @@
           </div>
         </div>
         <div class="card-footer">
-          <button [disabled]="!editForm.dirty" form="editForm" class="btn btn-success btn-block">Save Changes</button>
+          <button [disabled]="!editForm.dirty" form="editForm"
+            [title]="!editForm.dirty ? 'You must make changes before you can save any updates' : ''"
+            class="btn btn-success btn-block">
+              Save Changes
+          </button>
         </div>
       </div>
     </div>

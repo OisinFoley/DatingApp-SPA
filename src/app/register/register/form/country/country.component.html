@@ -1,0 +1,14 @@
+<div class="form-group" [formGroup]="this.registerForm">
+  <input
+    class="form-control"
+    placeholder="Country"
+    formControlName="country"
+    [ngClass]="{'is-invalid': registerForm.get('country').errors
+      && registerForm.get('country').touched}">
+  <div
+    class="invalid-feedback"
+    *ngIf="registerForm.get('country').touched
+      && registerForm.get('country').hasError('required')">
+        Country is required
+  </div>
+</div>

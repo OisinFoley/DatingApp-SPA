@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { AuthService } from 'src/app/_services/auth.service';
 import { UserService } from 'src/app/_services/user.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
+import { User } from 'src/app/_models/user';
 
 @Component({
   selector: 'app-photo-editor',
@@ -13,13 +14,18 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
   styleUrls: ['./photo-editor.component.css']
 })
 export class PhotoEditorComponent implements OnInit {
-  private authenticatedUserId: number = null;
-  private currentMain: Photo;
-  private baseUrl = environment.apiUri;
   @Input() photos: Photo[];
   @Output() getMemberPhotoChange = new EventEmitter<string>();
-  uploader: FileUploader;
-  hasBaseDropZoneOver = false;
+  private _authenticatedUserId: number = null;
+  private _currentMain: Photo;
+  private _baseUrl = environment.apiUri;
+  private _uploader: FileUploader;
+  private _hasBaseDropZoneOver = false;
+
+  get uploader(): FileUploader { return this._uploader; }
+  set uploader(e: FileUploader) { this._uploader = e; }
+  get hasBaseDropZoneOver(): boolean { return this._hasBaseDropZoneOver; }
+  set hasBaseDropZoneOver(e: boolean) { this._hasBaseDropZoneOver = e; }
 
   constructor(
     private authService: AuthService,
@@ -28,17 +34,13 @@ export class PhotoEditorComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.authenticatedUserId = +this.authService.decodedToken.getValue().nameid;
-    this.initializeUploader();
+    this._authenticatedUserId = +this.authService.decodedToken.getValue().nameid;
+    this._initializeUploader();
   }
 
-  fileOverBase(e: any): void {
-    this.hasBaseDropZoneOver = e;
-  }
-
-  initializeUploader() {
+  private _initializeUploader() {
     this.uploader = new FileUploader({
-      url: `${this.baseUrl}/users/${this.authenticatedUserId}/photos`,
+      url: `${this._baseUrl}/users/${this._authenticatedUserId}/photos`,
       authToken: `Bearer ${localStorage.getItem('token')}`,
       isHTML5: true,
       allowedFileType: ['image'],
@@ -58,33 +60,38 @@ export class PhotoEditorComponent implements OnInit {
         const photo = { id, url, dateAdded, description, isMain };
         this.photos.push(photo);
         if (photo.isMain) {
-          // TODO: export this and the same lines in setMainPhoto to a util function
-          this.authService.changeMemberPhoto(photo.url);
-          this.authService.currentUser.photoUrl = photo.url;
-          localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
+          this._updateUserPhotoInfo(photo.url, this.authService.currentUser);
         }
       }
     };
   }
 
+  fileOverBase(e: any): void {
+    this.hasBaseDropZoneOver = e;
+  }
+
   setMainPhoto(photo: Photo) {
-    this.userService.setMainPhoto(+this.authenticatedUserId, photo.id)
+    this.userService.setMainPhoto(+this._authenticatedUserId, photo.id)
       .subscribe(() => {
-        this.currentMain = this.photos.filter(p => p.isMain === true)[0];
-        this.currentMain.isMain = false;
+        this._currentMain = this.photos.filter(p => p.isMain === true)[0];
+        this._currentMain.isMain = false;
         photo.isMain = true;
-        this.authService.changeMemberPhoto(photo.url);
-        this.authService.currentUser.photoUrl = photo.url;
-        localStorage.setItem('user', JSON.stringify(this.authService.currentUser));
+        this._updateUserPhotoInfo(photo.url, this.authService.currentUser);
         this.alertify.success('Main photo updated');
       }, error => {
         this.alertify.error(error);
       });
   }
 
+  private _updateUserPhotoInfo(photoUrl: string, currentUser: User) {
+    this.authService.changeMemberPhoto(photoUrl);
+    this.authService.currentUser.photoUrl = photoUrl;
+    localStorage.setItem('user', JSON.stringify(currentUser));
+  }
+
   deletePhoto(id: number) {
     this.alertify.confirm('Are you sure you want to delete this photo?', () => {
-      this.userService.deletePhoto(+this.authenticatedUserId, id)
+      this.userService.deletePhoto(+this._authenticatedUserId, id)
         .subscribe(() => {
           this.photos.splice(
             this.photos.findIndex(p => p.id === id), 1

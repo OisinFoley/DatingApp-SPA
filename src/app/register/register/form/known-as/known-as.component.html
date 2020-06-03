@@ -1,0 +1,14 @@
+<div class="form-group" [formGroup]="this.registerForm">
+  <input
+    class="form-control"
+    placeholder="Known as"
+    formControlName="knownAs"
+    [ngClass]="{'is-invalid': registerForm.get('knownAs').errors
+      && registerForm.get('knownAs').touched}">
+  <div
+    class="invalid-feedback"
+    *ngIf="registerForm.get('knownAs').touched
+      && registerForm.get('knownAs').hasError('required')">
+        Known as is required
+  </div>
+</div>

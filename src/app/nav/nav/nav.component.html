@@ -1,8 +1,8 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-primary">
   <div class="container">
-    <a class="navbar-brand" routerLink="/home" >Navbar</a>  
+    <a class="navbar-brand" [routerLink]="isLoggedIn() ? '/members' : '/home'" >Bobbing For Apples</a>  
 
-    <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
+    <ul *ngIf="isLoggedIn()" class="navbar-nav mr-auto">
       <li class="nav-item active" routerLinkActive="active">
         <a class="nav-link" routerLink="/members">Matches</a>
       </li>
@@ -14,9 +14,9 @@
       </li>
     </ul>
 
-    <div *ngIf="loggedIn()" class="dropdown" dropdown>
+    <div *ngIf="isLoggedIn()" class="dropdown" dropdown>
       <span class="mr-0.5">
-        <img src="{{photoUrl || '../../../assets/user.png'}}" alt="User's Main Photo">
+        <img src="{{photoUrl || 'assets/user.png'}}" alt="User's Main Photo">
       </span>
       <a class="dropdown-toggle text-light" dropdownToggle>
         Welcome {{username | titlecase}}
@@ -32,21 +32,21 @@
       </div>
     </div>
 
-    <form *ngIf="!loggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
+    <form *ngIf="!isLoggedIn()" #loginForm="ngForm" class="form-inline my-2 my-lg-0" (ngSubmit)="login()">
       <input
         class="form-control mr-sm-2"
         type="text"
         name="username"
         placeholder="Username"
         required
-        [(ngModel)]="model.username"/>
+        [(ngModel)]="authData.username"/>
       <input
         class="form-control mr-sm-2"
         type="password"
         name="password"
         placeholder="Password"
         required
-        [(ngModel)]="model.password"/>
+        [(ngModel)]="authData.password"/>
       <button [disabled]="!loginForm.valid" class="btn btn-success my-2 my-sm-0" type="submit">Login</button>
     </form>
   </div>

@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { Pagination, PaginatedResult } from '../_models/pagination';
 import { User } from '../_models/user';
-import { AuthService } from '../_services/auth.service';
 import { UserService } from '../_services/user.service';
 import { AlertifyService } from '../_services/alertify.service';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-lists',
@@ -13,9 +12,16 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./lists.component.css']
 })
 export class ListsComponent implements OnInit {
-  users: User[];
-  pagination: Pagination;
-  likesParam: string;
+  private _users: User[];
+  private _pagination: Pagination;
+  private _likesParam: string;
+
+  get users(): User[] { return this._users; }
+  set users(e: User[]) { this._users = e; }
+  get pagination(): Pagination { return this._pagination; }
+  set pagination(e: Pagination) { this._pagination = e; }
+  get likesParam(): string { return this._likesParam; }
+  set likesParam(e: string) { this._likesParam = e; }
 
   constructor(
     private userService: UserService,
@@ -31,13 +37,11 @@ export class ListsComponent implements OnInit {
     this.likesParam = 'Likers';
   }
 
-  // TODO: remove duplication between this component and member-list
   pageChanged(event: any) {
     this.pagination.currentPage = event.page;
     this.loadUsers();
   }
 
-  // TODO: remove duplication between this component and member-list
   loadUsers() {
     return this.userService
       .getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, null, this.likesParam)

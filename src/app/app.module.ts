@@ -32,6 +32,17 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { ListsResolver } from './_resolvers/lists.resolver';
 import { MessagesResolver } from './_resolvers/messages.resolver';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+import { ResolverHelper } from './_resolvers/resolver-helper';
+import { RegisterKnownAsComponent } from './register/register/form/known-as/known-as.component';
+import { RegisterDateOfBirthComponent } from './register/register/form/date-of-birth/date-of-birth.component';
+import { RegisterGenderComponent } from './register/register/form/gender/gender.component';
+import { RegisterCityComponent } from './register/register/form/city/city.component';
+import { RegisterCountryComponent } from './register/register/form/country/country.component';
+import { RegisterUsernameComponent } from './register/register/form/username/username.component';
+import { RegisterPasswordComponent } from './register/register/form/password/password.component';
+import { RegisterConfirmPasswordComponent } from './register/register/form/confirm-password/confirm-password.component';
+import { MembersHelper } from './members/members-helper';
+import { LearnMoreComponent } from './learn-more/learn-more.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
@@ -53,7 +64,16 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       AppComponent,
       NavComponent,
       HomeComponent,
+      LearnMoreComponent,
       RegisterComponent,
+      RegisterKnownAsComponent,
+      RegisterDateOfBirthComponent,
+      RegisterGenderComponent,
+      RegisterCityComponent,
+      RegisterCountryComponent,
+      RegisterUsernameComponent,
+      RegisterPasswordComponent,
+      RegisterConfirmPasswordComponent,
       MemberListComponent,
       ListsComponent,
       MessagesComponent,
@@ -90,6 +110,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       AuthGuard,
       PreventUnsavedChangesGuard,
       AuthService,
+      ResolverHelper,
+      MembersHelper,
       MemberDetailResolver,
       MemberListResolver,
       MemberEditResolver,
@@ -102,8 +124,6 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       */
       { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
    ],
-   bootstrap: [
-      AppComponent
-   ]
+   bootstrap: [AppComponent]
 })
 export class AppModule { }

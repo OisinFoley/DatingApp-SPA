@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
+import { NgxGalleryOptions, NgxGalleryImage } from 'ngx-gallery';
 import { TabsetComponent } from 'ngx-bootstrap';
 
 import { User } from 'src/app/_models/user';
+import { MembersHelper } from '../../members-helper';
 
 @Component({
   selector: 'app-member-detail',
@@ -12,11 +13,21 @@ import { User } from 'src/app/_models/user';
 })
 export class MemberDetailComponent implements OnInit {
   @ViewChild('memberTabs', { static: true }) memberTabs: TabsetComponent;
-  user: User;
-  galleryOptions: NgxGalleryOptions[];
-  galleryImages: NgxGalleryImage[];
+  private _user: User;
+  private _galleryOptions: NgxGalleryOptions[];
+  private _galleryImages: NgxGalleryImage[];
 
-  constructor(private route: ActivatedRoute) {}
+  get user(): User { return this._user; }
+  set user(e: User) { this._user = e; }
+  get galleryOptions(): NgxGalleryOptions[] { return this._galleryOptions; }
+  set galleryOptions(e: NgxGalleryOptions[]) { this._galleryOptions = e; }
+  get galleryImages(): NgxGalleryImage[] { return this._galleryImages; }
+  set galleryImages(e: NgxGalleryImage[]) { this._galleryImages = e; }
+
+  constructor(
+    private route: ActivatedRoute,
+    private membersHelper: MembersHelper
+  ) {}
 
   ngOnInit() {
     this.route.data.subscribe(data => {
@@ -28,20 +39,11 @@ export class MemberDetailComponent implements OnInit {
       this.memberTabs.tabs[selectedTab > 0 ? selectedTab : 0].active = true;
     });
 
-    this.galleryOptions = [
-      {
-        width: '500px',
-        height: '500px',
-        imagePercent: 100,
-        thumbnailsColumns: 4,
-        imageAnimation: NgxGalleryAnimation.Slide,
-        preview: false
-      }
-    ];
-    this.galleryImages = this.getImages();
+    this.galleryOptions = this.membersHelper.getGalleryOptions();
+    this.galleryImages = this._getImages();
   }
 
-  getImages() {
+  private _getImages() {
     const imageURLs = [];
     for (const photo of this.user.photos) {
       imageURLs.push({
@@ -52,6 +54,10 @@ export class MemberDetailComponent implements OnInit {
       });
     }
     return imageURLs;
+  }
+
+  sendLike(user: User) {
+    this.membersHelper.handleSendLike(user);
   }
 
   selectTab(tabId: number) {

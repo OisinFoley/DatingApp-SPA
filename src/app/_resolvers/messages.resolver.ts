@@ -3,17 +3,16 @@ import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 
-import { User } from '../_models/user';
 import { UserService } from '../_services/user.service';
 import { AlertifyService } from '../_services/alertify.service';
-import { Message } from '../_models/Message';
+import { Message } from '../_models/message';
 import { AuthService } from '../_services/auth.service';
 
 @Injectable()
 export class MessagesResolver implements Resolve<Message[]> {
-  pageNumber = 1;
-  pageSize = 12;
-  messageContainer = 'Unread';
+  private pageNumber = 1;
+  private pageSize = 12;
+  private messageContainer = 'Unread';
 
   constructor(
     private userService: UserService,

@@ -6,6 +6,7 @@
         class="btn btn-sm mr-1"
         (click)="setMainPhoto(photo)"
         [ngClass]="photo.isMain ? 'btn-success active': 'btn-secondary'"
+        [title]="photo.isMain ? 'This is already your main photo': ''"
         [disabled]="photo.isMain">
           Main
       </button>

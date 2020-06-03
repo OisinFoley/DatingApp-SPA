@@ -14,14 +14,20 @@ import { AuthService } from 'src/app/_services/auth.service';
 })
 export class MemberEditComponent implements OnInit {
   @ViewChild('editForm', { static: true }) editForm: NgForm;
-  user: User;
-  photoUrl: string;
+  private _user: User;
+  private _photoUrl: string;
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
     if (this.editForm.dirty) {
       $event.returnValue = true;
     }
   }
+
+  get user(): User { return this._user; }
+  set user(e: User) { this._user = e; }
+  get photoUrl(): string { return this._photoUrl; }
+  set photoUrl(e: string) { this._photoUrl = e; }
+
   constructor(
     private route: ActivatedRoute,
     private alertify: AlertifyService,

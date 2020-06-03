@@ -1,31 +1,18 @@
-import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { User } from '../_models/user';
-import { UserService } from '../_services/user.service';
-import { AlertifyService } from '../_services/alertify.service';
+import { ResolverHelper } from './resolver-helper';
 
 @Injectable()
 export class MemberListResolver implements Resolve<User[]> {
-  pageNumber = 1;
-  pageSize = 12;
+  private pageNumber = 1;
+  private pageSize = 12;
 
-  constructor(
-    private userService: UserService,
-    private router: Router,
-    private alertify: AlertifyService
-  ) {}
+  constructor(private resolverHelper: ResolverHelper) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<User[]> {
-    return this.userService.getUsers(this.pageNumber, this.pageSize)
-      .pipe(
-        catchError(() => {
-          this.alertify.error('Problem retrieving data');
-          this.router.navigate(['/home']);
-          return of(null);
-        })
-      );
+    return this.resolverHelper.handleGetUsers(this.pageNumber, this.pageSize);
   }
 }

@@ -6,13 +6,15 @@ import { map } from 'rxjs/operators';
 import { User } from '../_models/user';
 import { environment } from 'src/environments/environment';
 import { PaginatedResult } from '../_models/pagination';
-import { Message } from '../_models/Message';
+import { Message } from '../_models/message';
+import { NewMessageInput } from '../_interfaces/new-message-input';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private baseUrl = environment.apiUri;
+  private readonly _baseUrl = environment.apiUri;
+  get baseUrl(): string { return this._baseUrl; }
 
   constructor(private http: HttpClient) {}
 
@@ -100,7 +102,7 @@ export class UserService {
     return this.http.get<Message[]>(`${this.baseUrl}/users/${id}/messages/thread/${recipientId}`);
   }
 
-  sendMessage(id: number, message: Message) {
+  sendMessage(id: number, message: NewMessageInput) {
     return this.http.post(`${this.baseUrl}/users/${id}/messages`, message);
   }
 

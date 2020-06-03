@@ -1,31 +1,21 @@
-import { Resolve, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { User } from '../_models/user';
-import { UserService } from '../_services/user.service';
-import { AlertifyService } from '../_services/alertify.service';
 import { AuthService } from '../_services/auth.service';
+import { ResolverHelper } from './resolver-helper';
 
 @Injectable()
 export class MemberEditResolver implements Resolve<User> {
   constructor(
-    private userService: UserService,
     private authService: AuthService,
-    private router: Router,
-    private alertify: AlertifyService
+    private resolverHelper: ResolverHelper
   ) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<User> {
-    return this.userService.getUser(
+    return this.resolverHelper.handleGetUser(
       +this.authService.decodedToken.getValue().nameid
-    ).pipe(
-      catchError(() => {
-        this.alertify.error('Problem retrieving data');
-        this.router.navigate(['/members']);
-        return of(null);
-      })
     );
   }
 }

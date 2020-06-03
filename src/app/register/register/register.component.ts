@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 
 import { AuthService } from 'src/app/_services/auth.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
-import { User } from 'src/app/_models/user';
+import { LoginParams } from 'src/app/_interfaces/login-params';
+import { RegisterInput } from 'src/app/_interfaces/register-input';
 
 @Component({
   selector: 'app-register',
@@ -13,12 +14,18 @@ import { User } from 'src/app/_models/user';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  user: User;
   @Output() cancelRegister = new EventEmitter();
-  registerForm: FormGroup;
-  bsConfig: Partial<BsDatepickerConfig>;
+  private _registerInput: RegisterInput;
+  private _registerForm: FormGroup;
+  private _bsConfig: Partial<BsDatepickerConfig>;
 
-  // TODO: break up form input template into more modular pieces
+  get registerInput(): RegisterInput { return this._registerInput; }
+  set registerInput(e: RegisterInput) { this._registerInput = e; }
+  get registerForm(): FormGroup { return this._registerForm; }
+  set registerForm(e: FormGroup) { this._registerForm = e; }
+  get bsConfig(): Partial<BsDatepickerConfig> { return this._bsConfig; }
+  set bsConfig(e: Partial<BsDatepickerConfig>) { this._bsConfig = e; }
+
   constructor(
     private authService: AuthService,
     private alertify: AlertifyService,
@@ -30,10 +37,10 @@ export class RegisterComponent implements OnInit {
     this.bsConfig = {
       containerClass: 'theme-red'
     };
-    this.createRegisterForm();
+    this._createRegisterForm();
   }
 
-  createRegisterForm() {
+  private _createRegisterForm() {
     this.registerForm = this.fb.group({
       gender: ['male'],
       username: ['', Validators.required],
@@ -43,23 +50,24 @@ export class RegisterComponent implements OnInit {
       country: ['', Validators.required],
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(32)]],
       confirmPassword: ['', Validators.required]
-    }, { validator: this.passwordMatchValidator });
+    }, { validator: this._passwordMatchValidator });
   }
 
-  passwordMatchValidator(g: FormGroup) {
+  private _passwordMatchValidator(g: FormGroup) {
     return g.get('password').value === g.get('confirmPassword').value ? null : { passwordsMismatch: true };
   }
 
   register() {
     if (this.registerForm.valid) {
-      this.user = {...this.registerForm.value};
-      this.authService.register(this.user)
+      this.registerInput = {...this.registerForm.value};
+      this.authService.register(this.registerInput)
         .subscribe(() => {
           this.alertify.success('Registration successful');
         }, error => {
           this.alertify.error(error);
         }, () => {
-          this.authService.login(this.user)
+          const loginParams = this.registerInput as LoginParams;
+          this.authService.login(loginParams)
             .subscribe(() => {
               this.router.navigate(['/members']);
             });
@@ -70,5 +78,4 @@ export class RegisterComponent implements OnInit {
   cancel() {
     this.cancelRegister.emit(false);
   }
-
 }

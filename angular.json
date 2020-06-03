@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "DatingApp-SPA": {
+    "BobbingForApples-SPA": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "../../Dotnet-Core/DatingApp.API/wwwroot",
+            "outputPath": "../../Dotnet-Core/BobbingForApples.API/wwwroot",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -63,18 +63,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "DatingApp-SPA:build"
+            "browserTarget": "BobbingForApples-SPA:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "DatingApp-SPA:build:production"
+              "browserTarget": "BobbingForApples-SPA:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "DatingApp-SPA:build"
+            "browserTarget": "BobbingForApples-SPA:build"
           }
         },
         "test": {
@@ -111,15 +111,15 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "DatingApp-SPA:serve"
+            "devServerTarget": "BobbingForApples-SPA:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "DatingApp-SPA:serve:production"
+              "devServerTarget": "BobbingForApples-SPA:serve:production"
             }
           }
         }
       }
     }},
-  "defaultProject": "DatingApp-SPA"
+  "defaultProject": "BobbingForApples-SPA"
 }

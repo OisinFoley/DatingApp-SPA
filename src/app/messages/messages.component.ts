@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { Message } from '../_models/Message';
+import { Message } from '../_models/message';
 import { Pagination, PaginatedResult } from '../_models/pagination';
 import { UserService } from '../_services/user.service';
 import { AuthService } from '../_services/auth.service';
@@ -13,10 +13,19 @@ import { AlertifyService } from '../_services/alertify.service';
   styleUrls: ['./messages.component.css']
 })
 export class MessagesComponent implements OnInit {
-  messages: Message[];
-  pagination: Pagination;
-  messageContainer = 'Unread';
-  authenticatedUserId: number;
+  private _messages: Message[];
+  private _pagination: Pagination;
+  private _messageContainer = 'Unread';
+  private _authenticatedUserId: number;
+
+  get messages(): Message[] { return this._messages; }
+  set messages(e: Message[]) { this._messages = e; }
+  get pagination(): Pagination { return this._pagination; }
+  set pagination(e: Pagination) { this._pagination = e; }
+  get messageContainer(): string { return this._messageContainer; }
+  set messageContainer(e: string) { this._messageContainer = e; }
+  get authenticatedUserId(): number { return this._authenticatedUserId; }
+  set authenticatedUserId(e: number) { this._authenticatedUserId = e; }
 
   constructor(
     private userService: UserService,

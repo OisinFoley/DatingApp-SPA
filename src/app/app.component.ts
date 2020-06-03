@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { JwtHelperService } from '@auth0/angular-jwt';
 
 import { AuthService } from './_services/auth.service';
 import { User } from './_models/user';
@@ -10,16 +9,13 @@ import { User } from './_models/user';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  jwtHelper = new JwtHelperService();
-  title = 'DatingApp-SPA';
-
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
     const token = localStorage.getItem('token');
     const user: User = JSON.parse(localStorage.getItem('user'));
     if (token) {
-      this.authService.decodedToken.next(this.jwtHelper.decodeToken(token));
+      this.authService.handleToken(token);
     }
     if (user) {
       this.authService.currentUser = user;

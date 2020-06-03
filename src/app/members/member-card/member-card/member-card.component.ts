@@ -1,8 +1,7 @@
 import { Component, Input } from '@angular/core';
+
 import { User } from 'src/app/_models/user';
-import { AuthService } from 'src/app/_services/auth.service';
-import { UserService } from 'src/app/_services/user.service';
-import { AlertifyService } from 'src/app/_services/alertify.service';
+import { MembersHelper } from '../../members-helper';
 
 @Component({
   selector: 'app-member-card',
@@ -11,18 +10,9 @@ import { AlertifyService } from 'src/app/_services/alertify.service';
 })
 export class MemberCardComponent {
   @Input() user: User;
-  constructor(
-    private authService: AuthService,
-    private userService: UserService,
-    private alertify: AlertifyService
-  ) {}
+  constructor(private membersHelper: MembersHelper) {}
 
-  sendLike(userToLikeId: number) {
-    const authenticatedUserId = +this.authService.decodedToken.getValue().nameid;
-    this.userService.sendLike(authenticatedUserId, userToLikeId).subscribe(data => {
-      this.alertify.success(`You have liked: ${this.user.knownAs}`);
-    }, error => {
-      this.alertify.error(error);
-    });
+  sendLike(user: User) {
+    this.membersHelper.handleSendLike(user);
   }
 }
